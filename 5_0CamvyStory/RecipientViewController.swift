@@ -23,12 +23,13 @@ class RecipientViewController: UIViewController, ABPeoplePickerNavigationControl
   
     override func viewDidLoad() {
       super.viewDidLoad()
-      personPicker.peoplePickerDelegate = self      
+      personPicker.peoplePickerDelegate = self
+      self.presentViewController(personPicker, animated: false, completion: nil)
     }
 
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-    self.presentViewController(personPicker, animated: false, completion: nil)
+//    self.presentViewController(personPicker, animated: false, completion: nil)
     //set up constants for layout
   }
     
