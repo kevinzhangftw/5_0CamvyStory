@@ -4,6 +4,8 @@ import AVFoundation
 
 let mediaMuxer = MediaMuxer()
 
+var someOutputURL:NSURL!
+
 class MediaMuxer: NSObject {
   
   var mutableComposition: AVMutableComposition!
@@ -19,27 +21,27 @@ class MediaMuxer: NSObject {
   func mux(#videoUrl:NSURL, and text:String) -> NSURL? {
     let mediaAsset = assetFromURL(videoUrl)
     
-
-    
     addVideo(mediaAsset)
-    addOverlay(mediaAsset, string: text)
+    addOverlay(mediaAsset, text: text)
     addAudio(mediaAsset)
     export()
     
     return nil
   }
-  //
+  
   
   func addVideo(mediaAsset: AVAsset) {
+    
     mutableVideoComposition = mutableVideoComposition(propertiesOfAsset: mediaAsset)
   }
   
-  func addOverlay(mediaAsset: AVAsset, string:String) {
+  func addOverlay(mediaAsset: AVAsset, text: String) {
+    
     let tempVideoLayer = videoLayer()
     let parentLayer = CALayer()
     parentLayer.frame = CGRectMake(0, 0, 480, 640)
     parentLayer.addSublayer(tempVideoLayer)
-    parentLayer.addSublayer(overlayLayer(overlay(text: string)))
+    parentLayer.addSublayer(overlayLayer(overlay(text)))
     mutableVideoComposition.animationTool = animationTool(videoLayer: tempVideoLayer, inLayer: parentLayer)
   }
   
@@ -53,6 +55,7 @@ class MediaMuxer: NSObject {
     
     self.exportSession.exportAsynchronouslyWithCompletionHandler {
       if self.exportSession.status == .Completed {
+        
         let path = self.exportSession.outputURL.relativePath!
         println("self.exportSession.outputURL.relativePath: \(self.exportSession.outputURL.relativePath)")
  
@@ -105,37 +108,39 @@ class MediaMuxer: NSObject {
     let videoInstruction = videoCompositionInstruction(assetTrack: videoTrack)
     composition.instructions = [videoInstruction]
     composition.renderSize = CGSizeMake(480, 640) //Variable.
-    composition.frameDuration = CMTimeMake(1, 30)
+    composition.frameDuration = CMTimeMake(1, 10)
     return composition
   }
   
   ///configuring text. needs to be redone here no hardcoding
-  func overlay(#text:String) -> CATextLayer {
+  func overlay(text: String) -> CATextLayer {
     let overlayText = CATextLayer()
     overlayText.font = "Helvetica"
-    overlayText.fontSize = 36
-    overlayText.frame = CGRectMake(0, 0, 100, 100)
+    overlayText.fontSize = 60
+    overlayText.frame = CGRectMake(0, 0, self.videoLayer().bounds.width, 100)
+    println("self.videoLayer().bounds.width: \(self.videoLayer().bounds.width)")
     overlayText.string = text
     overlayText.alignmentMode = kCAAlignmentCenter
     overlayText.foregroundColor = UIColor.whiteColor().CGColor
-    overlayText.backgroundColor = UIColor.blackColor().CGColor
+    overlayText.backgroundColor = UIColor.clearColor().CGColor
     return overlayText
   }
   
   func overlayLayer(textLayer:CALayer) -> CALayer {
     let overlayLayer = CALayer()
     overlayLayer.addSublayer(textLayer)
-    overlayLayer.backgroundColor = UIColor.darkGrayColor().CGColor
-    overlayLayer.frame = CGRectMake(0, 0, 100, 100)
+    overlayLayer.backgroundColor = UIColor.clearColor().CGColor
+    overlayLayer.frame = CGRectMake(0, (self.videoLayer().bounds.height)/2, self.videoLayer().bounds.width, 100)
+    println("self.videoLayer().bounds.height: \(self.videoLayer().bounds.height)")
     overlayLayer.masksToBounds = true
-    overlayLayer.opacity = 0.8
+//    overlayLayer.opacity = 0.8
     return overlayLayer
   }
   
   func videoLayer() -> CALayer {
     let videoLayer = CALayer()
     videoLayer.frame = CGRectMake(0, 0, 480, 640)
-    videoLayer.opacity = 0.5
+//    videoLayer.opacity = 0.5
     return videoLayer
   }
   
@@ -163,7 +168,11 @@ class MediaMuxer: NSObject {
   }
   
   func exportSession(#composition: AVComposition, videoComposition:AVVideoComposition, audioMix:AVAudioMix, outputURL:NSURL) -> AVAssetExportSession {
+    
+    //AVAssetExportSession init with 2 parameters; the avasset to export and the preset
     let exportSession = AVAssetExportSession(asset: composition as AVAsset, presetName: AVAssetExportPreset640x480)
+    
+    //the exportsession configuration
     exportSession.videoComposition = videoComposition
     exportSession.audioMix = audioMix
     exportSession.outputURL = outputURL
@@ -179,19 +188,6 @@ class MediaMuxer: NSObject {
     println("didFinishExporting!!!")
   }
   
-  /*
-  // 5 - Create exporter
-  AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mixComposition
-  presetName:AVAssetExportPresetHighestQuality];
-  exporter.outputURL=url;
-  exporter.outputFileType = AVFileTypeQuickTimeMovie;
-  exporter.shouldOptimizeForNetworkUse = YES;
-  [exporter exportAsynchronouslyWithCompletionHandler:^{
-  dispatch_async(dispatch_get_main_queue(), ^{
-  [self exportDidFinish:exporter];
-  });
-  }];
-*/
   
   
   func assetFromURL(url:NSURL) -> AVAsset {
@@ -201,21 +197,10 @@ class MediaMuxer: NSObject {
   
 }
 
-var someOutputURL:NSURL!
+
 
 func outputURL() -> NSURL {
-//  let timeInterval = NSDate().timeIntervalSince1970
-//  let timeString = String(format: "time%.f", timeInterval)
-//  
-//  var tempString = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).first! as! String
-//  
-//  tempString = tempString.stringByAppendingPathComponent("rawrDirectory/" + timeString + "movie.m4v")
-//  
-//  let outputString = NSHomeDirectory().stringByAppendingPathComponent(timeString + "-movie.m4v")
-//  let output = NSURL(fileURLWithPath: outputString, isDirectory: false)!
-//  
-//  return NSURL(fileURLWithPath: tempString, isDirectory: false)!
-  //make directory first
+
   var outputString = ""
   let timeInterval = NSDate().timeIntervalSince1970
   
