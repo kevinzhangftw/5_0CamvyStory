@@ -14,7 +14,11 @@ class MediaViewController: UIViewController {
   dynamic var movieWriter: GPUImageMovieWriter!
   var textField: UITextField!
   var currentOutputURL: NSURL!
-  
+  var recipientName: String! {
+    didSet{
+      textField.attributedText = textFieldAttributedString(recipientName)
+    }
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -91,16 +95,13 @@ class MediaViewController: UIViewController {
     let textFieldHeight: CGFloat = 100
     textField = UITextField(frame: CGRectMake(0, (self.view.bounds.height - textFieldHeight)/4, textFieldWidth, textFieldHeight))
     textField.backgroundColor = UIColor.redColor()
-    
-    //delegate to configure recording setups in relations to the textfield
     textField.delegate = self
     
     //textfield to be become first responder
 //    textField.becomeFirstResponder()
     
-    //textfield font configuration here
     textField.font = UIFont(name: "Helvetica", size: 55)
-    textField.attributedText = textFieldFont()
+    textField.attributedText = textFieldAttributedString("placeholder")
     textField.textAlignment = NSTextAlignment.Center
     textField.autocapitalizationType = UITextAutocapitalizationType.None
     textField.autocorrectionType = UITextAutocorrectionType.No
@@ -115,14 +116,11 @@ class MediaViewController: UIViewController {
     
   }
   
-  func textFieldFont() -> NSAttributedString {
-    return NSAttributedString(string: personFirstName, attributes:
-      [NSForegroundColorAttributeName: UIColor.whiteColor()])
+  func textFieldAttributedString(name:String) -> NSAttributedString {
+    return NSAttributedString(
+      string: name,
+      attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
   }
-  
-  
-  
-
   
 }
 

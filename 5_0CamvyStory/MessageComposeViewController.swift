@@ -1,5 +1,4 @@
 
-
 import UIKit
 import MessageUI
 
@@ -10,6 +9,7 @@ protocol MessageComposeViewControllerDelegate {
 class MessageComposeViewController: UIViewController, MFMessageComposeViewControllerDelegate {
 
   var recipientDelegate: MessageComposeViewControllerDelegate?
+  var recipientNumber: String!
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,11 +27,10 @@ class MessageComposeViewController: UIViewController, MFMessageComposeViewContro
     return MFMessageComposeViewController.canSendText()
   }
   
-  func configuredMessageComposeViewController() -> MFMessageComposeViewController {
+  func configuredMessageComposeViewController(number: String) -> MFMessageComposeViewController {
     let mfmessageComposeVC = MFMessageComposeViewController()
         mfmessageComposeVC.messageComposeDelegate = self
-        mfmessageComposeVC.recipients = [phoneNumberString]
-        mfmessageComposeVC.body = personFirstName
+        mfmessageComposeVC.recipients = [number]
         mfmessageComposeVC.addAttachmentURL(someOutputURL, withAlternateFilename: nil)
     return mfmessageComposeVC
   }

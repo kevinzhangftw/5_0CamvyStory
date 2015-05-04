@@ -130,7 +130,7 @@ class MediaMuxer: NSObject {
     let overlayLayer = CALayer()
     overlayLayer.addSublayer(textLayer)
     overlayLayer.backgroundColor = UIColor.clearColor().CGColor
-    overlayLayer.frame = CGRectMake(0, (self.videoLayer().bounds.height)/2, self.videoLayer().bounds.width, 100)
+    overlayLayer.frame = CGRectMake(0, (self.videoLayer().bounds.height)/22, self.videoLayer().bounds.width, 100)
     println("self.videoLayer().bounds.height: \(self.videoLayer().bounds.height)")
     overlayLayer.masksToBounds = true
 //    overlayLayer.opacity = 0.8
