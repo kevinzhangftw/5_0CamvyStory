@@ -13,7 +13,6 @@ class ViewController: UIViewController, UINavigationControllerDelegate, MessageC
     super.viewDidLoad()
     setup()
     //wear the delgate hats
-    
     messageComposeVC.recipientDelegate = self
   }
   

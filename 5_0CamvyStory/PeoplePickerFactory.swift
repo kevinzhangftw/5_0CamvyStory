@@ -1,18 +1,18 @@
 
-import UIKit
+//import UIKit
 import AddressBookUI
 
 //var phoneNumberString: String!
 //var personFirstName: String!
 
-protocol RecipientViewControllerDelegate {
-  func recipientViewControllerDidFinishPicking()
-}
+//protocol PeoplePickerFactoryDelegate {
+//  func peoplePickerFactoryDidFinishPicking()
+//}
 
 class PeoplePickerFactory: NSObject {
   
-        var delegate: RecipientViewControllerDelegate?
-//  
+//        var delegate: PeoplePickerFactoryDelegate?
+//
 //    override func viewDidLoad() {
 //      super.viewDidLoad()
 //      personPicker.peoplePickerDelegate = self
@@ -26,7 +26,8 @@ class PeoplePickerFactory: NSObject {
   }
   
   func setup(){
-  //
+  //setup enviroment 
+  
   }
   
   static func returnaPeoplepicker ()-> ABPeoplePickerNavigationController {
