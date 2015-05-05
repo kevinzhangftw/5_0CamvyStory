@@ -56,7 +56,8 @@ extension ViewController: ABPeoplePickerNavigationControllerDelegate{
     recipientNumber = number
     self.dismissViewControllerAnimated(true, completion: { () -> Void in
       //start recording here.
-      //mediaVC. startrecording
+    println("start recodring here")
+      self.mediaVC!.recordNewVideo()
     })
   }
 }
