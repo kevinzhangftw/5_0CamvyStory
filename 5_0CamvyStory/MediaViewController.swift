@@ -8,7 +8,6 @@ protocol MediaViewControllerDelegate {
 class MediaViewController: UIViewController {
 
   var messageDelegate: MediaViewControllerDelegate?
-  
   var videoCamera: GPUImageVideoCamera!
   var videoView: GPUImageView!
   dynamic var movieWriter: GPUImageMovieWriter!
@@ -25,29 +24,30 @@ class MediaViewController: UIViewController {
     setup()
   }
   
-  override func viewWillAppear(animated: Bool) {
-    videoCamera.startCameraCapture()
-    recordNewVideo()
-  }
-  
-  func recordNewVideo() {
-    setupMovieWriter()
-    movieWriter.startRecording()
-  }
-  
-  override func viewDidAppear(animated: Bool) {
-    textField.becomeFirstResponder() //animated keyboard slide-in
-  }
-
-  
   func setup(){
     setupVideoCamera()
     setupVideoView()
     setupTextInput()
   }
+  
+  override func viewWillAppear(animated: Bool) {
+    videoCamera.startCameraCapture()
+    textField.becomeFirstResponder()
+//    recordNewVideo()
+  }
+
+  //to be called through view controller
+  func recordNewVideo() {
+    setupMovieWriter()
+    movieWriter.startRecording()
+  }
+  
+//  override func viewDidAppear(animated: Bool) {
+//    textField.becomeFirstResponder() //animated keyboard slide-in
+//  }
 
   func setupVideoCamera(){
-    videoCamera = GPUImageVideoCamera(sessionPreset: AVCaptureSessionPreset640x480, cameraPosition: .Front)
+    videoCamera = GPUImageVideoCamera(sessionPreset: AVCaptureSessionPresetHigh, cameraPosition: .Front)
     videoCamera.outputImageOrientation = .Portrait
     videoCamera.horizontallyMirrorFrontFacingCamera = true
   }
@@ -61,7 +61,34 @@ class MediaViewController: UIViewController {
       videoCamera.addTarget(videoView)
     }
   }
-
+  
+  func setupTextInput() {
+    //textfield frame configuration begins here
+    let textFieldWidth = self.view.bounds.width
+    let textFieldHeight: CGFloat = 100
+    textField.delegate = self
+    textField = UITextField(frame: CGRectMake(0, (self.view.bounds.height - textFieldHeight)/4, textFieldWidth, textFieldHeight))
+    textField.backgroundColor = UIColor.redColor()
+    textField.font = UIFont(name: "Helvetica", size: 55)
+    textField.attributedText = textFieldAttributedString("placeholder")
+    textField.textAlignment = NSTextAlignment.Center
+    textField.autocapitalizationType = UITextAutocapitalizationType.None
+    textField.autocorrectionType = UITextAutocorrectionType.No
+    textField.spellCheckingType = UITextSpellCheckingType.No
+    textField.keyboardType = UIKeyboardType.Default
+    textField.keyboardAppearance = UIKeyboardAppearance.Dark
+    textField.returnKeyType = UIReturnKeyType.Done
+    textField.enablesReturnKeyAutomatically = true
+    //add this view
+    view.addSubview(textField)
+  }
+  
+  func textFieldAttributedString(name:String) -> NSAttributedString {
+    return NSAttributedString(
+      string: "yo" + name,
+      attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+  }
+  
   func setupMovieWriter() {
     assert(videoCamera != nil, "videoCamera is nil!!!")
     movieWriter = GPUImageMovieWriter(movieURL: outputURL(), size: outputSize())
@@ -73,9 +100,8 @@ class MediaViewController: UIViewController {
     
   }
   
-  
   func outputSize() -> CGSize {
-    return CGSizeMake(480.0, 640.0)
+    return CGSizeMake(self.view.bounds.width, self.view.bounds.height)
   }
   
   func outputURL() -> NSURL {
@@ -88,62 +114,20 @@ class MediaViewController: UIViewController {
     println("outputURL currentOutputURL:\(currentOutputURL)")
     return currentOutputURL
   }
-
-  func setupTextInput() {
-    //textfield frame configuration begins here
-    let textFieldWidth = self.view.bounds.width
-    let textFieldHeight: CGFloat = 100
-    textField = UITextField(frame: CGRectMake(0, (self.view.bounds.height - textFieldHeight)/4, textFieldWidth, textFieldHeight))
-    textField.backgroundColor = UIColor.redColor()
-    textField.delegate = self
-    
-    //textfield to be become first responder
-//    textField.becomeFirstResponder()
-    
-    textField.font = UIFont(name: "Helvetica", size: 55)
-    textField.attributedText = textFieldAttributedString("placeholder")
-    textField.textAlignment = NSTextAlignment.Center
-    textField.autocapitalizationType = UITextAutocapitalizationType.None
-    textField.autocorrectionType = UITextAutocorrectionType.No
-    textField.spellCheckingType = UITextSpellCheckingType.No
-    textField.keyboardType = UIKeyboardType.Default
-    textField.keyboardAppearance = UIKeyboardAppearance.Dark
-    textField.returnKeyType = UIReturnKeyType.Done
-    textField.enablesReturnKeyAutomatically = true
-    
-    //add this view
-    view.addSubview(textField)
-    
-  }
   
-  func textFieldAttributedString(name:String) -> NSAttributedString {
-    return NSAttributedString(
-      string: name,
-      attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
-  }
-  
-}
+} //class ends here. extension begins
 
 extension MediaViewController: UITextFieldDelegate {
- 
+  //upon textfield done button being pressed, finish recording and proceed to the next stage
   func textFieldShouldReturn(textField: UITextField) -> Bool {
       movieWriter.finishRecordingWithCompletionHandler {
-
-        
-                //end session upon completion
-                self.videoCamera.stopCameraCapture()
-        
         //upon completion, pass all the stuff to the muxer to complete the action
         mediaMuxer.mux(videoUrl: self.currentOutputURL, and: textField.attributedText!.string)
-        
-                //call message composer
-                self.messageDelegate?.mediaViewControllerDidFinish()
-        
-                }
-    
+        //call message composer
+        self.messageDelegate?.mediaViewControllerDidFinish()
+        }
     return true
   }
-  
 }
 
 

@@ -5,14 +5,16 @@ import AddressBookUI
 
 class ViewController: UIViewController, UINavigationControllerDelegate, MessageComposeViewControllerDelegate {
   
+  var recipientNumber: String!
+  
   var mediaVC: MediaViewController?
   let messageComposeVC = MessageComposeViewController()
-  var recipientNumber: String!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     setup()
-    //wear the delgate hats
+    
+    //wear the delgate hat for messagecomposevc to call people picker factory upon completion
     messageComposeVC.recipientDelegate = self
   }
   
@@ -22,9 +24,11 @@ class ViewController: UIViewController, UINavigationControllerDelegate, MessageC
   
   func presentRecipientVC() {
     var peoplePicker = PeoplePickerFactory.returnaPeoplepicker()
+    //people picker is an instance of system view controller for displaying system contacts
     peoplePicker.peoplePickerDelegate = self
+    //view will be presented through viewdidload
     self.presentViewController(peoplePicker, animated: true){
-      self.addMediaVC() //preloading for performance
+      self.addMediaVC() //upon completion of presenting viewcontroller, preloading for performance
     }
   }
   
@@ -32,28 +36,31 @@ class ViewController: UIViewController, UINavigationControllerDelegate, MessageC
     //TODO: make idempotent.
     if mediaVC == nil {
       mediaVC = MediaViewController()
-      mediaVC!.messageDelegate = self
+      //message delegate to trigger mfmessage upon media completion
+      mediaVC?.messageDelegate = self
+      
+      //presenting child viewcontroller
       self.addChildViewController(mediaVC!)
+      println(mediaVC!.view)
       self.view.addSubview(mediaVC!.view)
       mediaVC!.didMoveToParentViewController(self)
     }
     
   }
-  
-  
     override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
-
-
 }
 
+//class ends here extensions begin
+
 extension ViewController: ABPeoplePickerNavigationControllerDelegate{
-  func peoplePickerNavigationController( peoplePicker: ABPeoplePickerNavigationController!, didSelectPerson person: ABRecordRef!) {
+  func peoplePickerNavigationController(peoplePicker: ABPeoplePickerNavigationController!, didSelectPerson person: ABRecordRef!) {
     let (name, number) = PeoplePickerFactory.NameandPhonenumber(person: person)
     mediaVC!.recipientName = name
     recipientNumber = number
+    
     self.dismissViewControllerAnimated(true, completion: { () -> Void in
       //start recording here.
     println("start recodring here")
@@ -63,7 +70,6 @@ extension ViewController: ABPeoplePickerNavigationControllerDelegate{
 }
 
 extension ViewController:  MediaViewControllerDelegate{
-  
   func mediaViewControllerDidFinish() {
     if messageComposeVC.canSendText(){
       let systemMFMessageComposeVC = messageComposeVC.configuredMessageComposeViewController(recipientNumber)
