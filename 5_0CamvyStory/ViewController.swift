@@ -7,7 +7,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, MessageC
   
   var recipientNumber: String!
   
-  var mediaVC: MediaViewController?
+  var mediaVC: MediaViewController!
   let messageComposeVC = MessageComposeViewController()
   
   override func viewDidLoad() {
@@ -33,17 +33,16 @@ class ViewController: UIViewController, UINavigationControllerDelegate, MessageC
   }
   
   func addMediaVC() {
-    //TODO: make idempotent.
     if mediaVC == nil {
       mediaVC = MediaViewController()
       //message delegate to trigger mfmessage upon media completion
-      mediaVC?.messageDelegate = self
+      mediaVC.messageDelegate = self
       
       //presenting child viewcontroller
-      self.addChildViewController(mediaVC!)
-      println(mediaVC!.view)
-      self.view.addSubview(mediaVC!.view)
-      mediaVC!.didMoveToParentViewController(self)
+      self.addChildViewController(mediaVC)
+      println(mediaVC.view!)
+      self.view.addSubview(mediaVC.view!)
+      mediaVC.didMoveToParentViewController(self)
     }
     
   }

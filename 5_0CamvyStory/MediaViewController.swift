@@ -48,6 +48,7 @@ class MediaViewController: UIViewController {
 
   func setupVideoCamera(){
     videoCamera = GPUImageVideoCamera(sessionPreset: AVCaptureSessionPresetHigh, cameraPosition: .Front)
+    assert(videoCamera != nil, "videoCamera is nil!!")
     videoCamera.outputImageOrientation = .Portrait
     videoCamera.horizontallyMirrorFrontFacingCamera = true
   }
@@ -66,7 +67,7 @@ class MediaViewController: UIViewController {
     //textfield frame configuration begins here
     let textFieldWidth = self.view.bounds.width
     let textFieldHeight: CGFloat = 100
-    textField.delegate = self
+    
     textField = UITextField(frame: CGRectMake(0, (self.view.bounds.height - textFieldHeight)/4, textFieldWidth, textFieldHeight))
     textField.backgroundColor = UIColor.redColor()
     textField.font = UIFont(name: "Helvetica", size: 55)
@@ -81,11 +82,14 @@ class MediaViewController: UIViewController {
     textField.enablesReturnKeyAutomatically = true
     //add this view
     view.addSubview(textField)
+    
+    //delegate
+    textField.delegate = self
   }
   
   func textFieldAttributedString(name:String) -> NSAttributedString {
     return NSAttributedString(
-      string: "yo" + name,
+      string: "yo " + name + ",",
       attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
   }
   
