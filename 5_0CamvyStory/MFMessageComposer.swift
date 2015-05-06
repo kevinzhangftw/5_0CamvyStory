@@ -1,26 +1,13 @@
-
-import UIKit
 import MessageUI
 
-protocol MessageComposeViewControllerDelegate {
-  func messageComposeViewControllerDidFinish()
+protocol MFMessageComposerDelegate {
+  func mfMessageComposerDidFinish()
 }
 
-class MessageComposeViewController: UIViewController, MFMessageComposeViewControllerDelegate {
+class MFMessageComposer: NSObject {
 
-  var recipientDelegate: MessageComposeViewControllerDelegate?
+  var recipientDelegate: MFMessageComposerDelegate?
   var recipientNumber: String!
-  
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
   
   // A wrapper function to indicate whether or not a text message can be sent from the user's device
   func canSendText() -> Bool {
@@ -34,12 +21,16 @@ class MessageComposeViewController: UIViewController, MFMessageComposeViewContro
         mfmessageComposeVC.addAttachmentURL(someOutputURL, withAlternateFilename: nil)
     return mfmessageComposeVC
   }
+
+} //class ends here. extension begins
+
+extension MFMessageComposer: MFMessageComposeViewControllerDelegate {
   
   func messageComposeViewController(controller: MFMessageComposeViewController!, didFinishWithResult result: MessageComposeResult) {
     //dimisssViewcontroller
     controller.dismissViewControllerAnimated(true, completion: nil)
     //trigger receipient vc again
-    recipientDelegate?.messageComposeViewControllerDidFinish()
+    recipientDelegate?.mfMessageComposerDidFinish()
     
   }
 

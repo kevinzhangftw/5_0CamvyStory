@@ -70,7 +70,7 @@ class MediaViewController: UIViewController {
     
     textField = UITextField(frame: CGRectMake(0, (self.view.bounds.height - textFieldHeight)/4, textFieldWidth, textFieldHeight))
     textField.backgroundColor = UIColor.redColor()
-    textField.font = UIFont(name: "Helvetica", size: 55)
+    textField.font = UIFont(name: "Helvetica", size: 50)
     textField.attributedText = textFieldAttributedString("placeholder")
     textField.textAlignment = NSTextAlignment.Center
     textField.autocapitalizationType = UITextAutocapitalizationType.None

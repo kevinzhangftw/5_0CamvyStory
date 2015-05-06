@@ -3,12 +3,12 @@
 import UIKit
 import AddressBookUI
 
-class ViewController: UIViewController, UINavigationControllerDelegate, MessageComposeViewControllerDelegate {
+class ViewController: UIViewController, UINavigationControllerDelegate {
   
   var recipientNumber: String!
   
   var mediaVC: MediaViewController!
-  let messageComposeVC = MessageComposeViewController()
+  let messageComposeVC = MFMessageComposer()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -41,8 +41,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate, MessageC
       //presenting child viewcontroller
       self.addChildViewController(mediaVC)
       println(mediaVC.view!)
-      self.view.addSubview(mediaVC.view!)
-      mediaVC.didMoveToParentViewController(self)
+      self.view.addSubview(mediaVC!.view)
+      mediaVC!.didMoveToParentViewController(self)
     }
     
   }
@@ -80,8 +80,8 @@ extension ViewController:  MediaViewControllerDelegate{
   }
 }
 
-extension ViewController: MessageComposeViewControllerDelegate{
-  func messageComposeViewControllerDidFinish() {
+extension ViewController: MFMessageComposerDelegate{
+  func mfMessageComposerDidFinish() {
     //TODO: clear textfield, show another people picker
     mediaVC!.recipientName = ""
     presentRecipientVC()
