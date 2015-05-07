@@ -27,7 +27,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     //people picker is an instance of system view controller for displaying system contacts
     peoplePicker.peoplePickerDelegate = self
     //view will be presented through viewdidload
-    self.presentViewController(peoplePicker, animated: true){
+    self.presentViewController(peoplePicker, animated: false){
       self.addMediaVC() //upon completion of presenting viewcontroller, preloading for performance
     }
   }

@@ -109,6 +109,7 @@ class Muxer: NSObject {
     composition.instructions = [videoInstruction]
     composition.renderSize = CGSizeMake(480, 640) //Variable.
     composition.frameDuration = CMTimeMake(1, 10)
+    //TODO: reduce video duration
     return composition
   }
   
@@ -184,7 +185,6 @@ class Muxer: NSObject {
     return exportSession
   }
   
-  //
   
   func didFinishExporting() {
     println("didFinishExporting!!!")
@@ -197,25 +197,20 @@ class Muxer: NSObject {
   }
 }
 
-
-
-func outputURL() -> NSURL {
-  var outputString = ""
-  let timeInterval = NSDate().timeIntervalSince1970
-
-  let success = NSFileManager.defaultManager().createDirectoryAtPath(NSHomeDirectory().stringByAppendingPathComponent("Documents/rawrDirectory"), withIntermediateDirectories: false, attributes: nil, error: nil);
-  if success {
-    println("Creating directory successful!")
-    outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/rawrDirectory" + "\(timeInterval)" + "-movie.m4v")
+  func outputURL() -> NSURL {
+    var outputString = ""
+    let timeInterval = NSDate().timeIntervalSince1970
     
-  } else {
-    println("Creating directory on time interval otherwise")
-    outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/" + "\(timeInterval)" + "-movie.m4v")
+    let success = NSFileManager.defaultManager().createDirectoryAtPath(NSHomeDirectory().stringByAppendingPathComponent("Documents/rawrDirectory"), withIntermediateDirectories: false, attributes: nil, error: nil);
+    if success {
+      println("Creating directory successful!")
+      outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/rawrDirectory" + "\(timeInterval)" + "-movie.m4v")
+    }else{
+      println("Creating directory on time interval otherwise")
+      outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/" + "\(timeInterval)" + "-movie.m4v")
   }
-  
   
   someOutputURL = NSURL(fileURLWithPath: outputString, isDirectory: false)!
   println("someOutputURL currentOutputURL:\(someOutputURL)")
   return someOutputURL
-  
 }
