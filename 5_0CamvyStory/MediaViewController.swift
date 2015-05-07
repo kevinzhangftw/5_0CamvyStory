@@ -68,8 +68,8 @@ class MediaViewController: UIViewController {
     let textFieldWidth = self.view.bounds.width
     let textFieldHeight: CGFloat = 100
     
-    textField = UITextField(frame: CGRectMake(0, (self.view.bounds.height - textFieldHeight)/4, textFieldWidth, textFieldHeight))
-    textField.backgroundColor = UIColor.redColor()
+    textField = UITextField(frame: CGRectMake(0, (self.view.bounds.height - textFieldHeight)/8, textFieldWidth, textFieldHeight))
+    textField.backgroundColor = UIColor.clearColor()
     textField.font = UIFont(name: "Helvetica", size: 40)
     textField.attributedText = textFieldAttributedString("placeholder")
     textField.textAlignment = NSTextAlignment.Center

@@ -122,7 +122,7 @@ class Muxer: NSObject {
     overlayText.string = text
     overlayText.alignmentMode = kCAAlignmentCenter
     overlayText.foregroundColor = UIColor.whiteColor().CGColor
-    overlayText.backgroundColor = UIColor.redColor().CGColor
+    overlayText.backgroundColor = UIColor.clearColor().CGColor
     return overlayText
   }
   
@@ -130,7 +130,7 @@ class Muxer: NSObject {
     let overlayLayer = CALayer()
     overlayLayer.addSublayer(textLayer)
     overlayLayer.backgroundColor = UIColor.clearColor().CGColor
-    overlayLayer.frame = CGRectMake(0, (self.videoLayer().bounds.height)/1.2, self.videoLayer().bounds.width, 100)
+    overlayLayer.frame = CGRectMake(0, (self.videoLayer().bounds.height)/1.4, self.videoLayer().bounds.width, 100)
     println("self.videoLayer().bounds.height: \(self.videoLayer().bounds.height)")
     overlayLayer.masksToBounds = true
 //    overlayLayer.opacity = 0.8
@@ -195,18 +195,14 @@ class Muxer: NSObject {
   func assetFromURL(url:NSURL) -> AVAsset {
     return AVAsset.assetWithURL(url) as! AVAsset
   }
- 
-  
 }
 
 
 
 func outputURL() -> NSURL {
-
   var outputString = ""
   let timeInterval = NSDate().timeIntervalSince1970
-  
-  
+
   let success = NSFileManager.defaultManager().createDirectoryAtPath(NSHomeDirectory().stringByAppendingPathComponent("Documents/rawrDirectory"), withIntermediateDirectories: false, attributes: nil, error: nil);
   if success {
     println("Creating directory successful!")
