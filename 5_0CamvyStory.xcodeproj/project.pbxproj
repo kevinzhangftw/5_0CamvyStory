@@ -14,7 +14,7 @@
 		349296011AE5D24800868751 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 349295FF1AE5D24800868751 /* LaunchScreen.xib */; };
 		3492960D1AE5D24800868751 /* __0CamvyStoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492960C1AE5D24800868751 /* __0CamvyStoryTests.swift */; };
 		349296171AE5D48B00868751 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349296161AE5D48B00868751 /* MediaViewController.swift */; };
-		34AB11F61AE7018C00AE46D9 /* MediaMuxer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AB11F51AE7018C00AE46D9 /* MediaMuxer.swift */; };
+		34AB11F61AE7018C00AE46D9 /* Muxer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AB11F51AE7018C00AE46D9 /* Muxer.swift */; };
 		34F2200C1AEDA3C4000ED98C /* PeoplePickerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F2200B1AEDA3C4000ED98C /* PeoplePickerFactory.swift */; };
 		34F2200E1AEDCD33000ED98C /* MFMessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F2200D1AEDCD33000ED98C /* MFMessageComposer.swift */; };
 		40501BC2E21FA8254DEB362D /* libPods-5_0CamvyStory.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 97642C1BDA76F86D8A63DD8A /* libPods-5_0CamvyStory.a */; };
@@ -43,7 +43,7 @@
 		3492960C1AE5D24800868751 /* __0CamvyStoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = __0CamvyStoryTests.swift; sourceTree = "<group>"; };
 		349296161AE5D48B00868751 /* MediaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaViewController.swift; sourceTree = "<group>"; };
 		34AB11F21AE7009B00AE46D9 /* 5_0CamvyStory-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "5_0CamvyStory-Bridging-Header.h"; sourceTree = "<group>"; };
-		34AB11F51AE7018C00AE46D9 /* MediaMuxer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMuxer.swift; sourceTree = "<group>"; };
+		34AB11F51AE7018C00AE46D9 /* Muxer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Muxer.swift; sourceTree = "<group>"; };
 		34F2200B1AEDA3C4000ED98C /* PeoplePickerFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeoplePickerFactory.swift; sourceTree = "<group>"; };
 		34F2200D1AEDCD33000ED98C /* MFMessageComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFMessageComposer.swift; sourceTree = "<group>"; };
 		97642C1BDA76F86D8A63DD8A /* libPods-5_0CamvyStory.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-5_0CamvyStory.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,7 +98,7 @@
 				349296161AE5D48B00868751 /* MediaViewController.swift */,
 				34F2200D1AEDCD33000ED98C /* MFMessageComposer.swift */,
 				34F2200B1AEDA3C4000ED98C /* PeoplePickerFactory.swift */,
-				34AB11F51AE7018C00AE46D9 /* MediaMuxer.swift */,
+				34AB11F51AE7018C00AE46D9 /* Muxer.swift */,
 				349295FA1AE5D24800868751 /* Main.storyboard */,
 				349295FD1AE5D24800868751 /* Images.xcassets */,
 				349295FF1AE5D24800868751 /* LaunchScreen.xib */,
@@ -285,7 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				34AB11F61AE7018C00AE46D9 /* MediaMuxer.swift in Sources */,
+				34AB11F61AE7018C00AE46D9 /* Muxer.swift in Sources */,
 				34F2200E1AEDCD33000ED98C /* MFMessageComposer.swift in Sources */,
 				349296171AE5D48B00868751 /* MediaViewController.swift in Sources */,
 				34F2200C1AEDA3C4000ED98C /* PeoplePickerFactory.swift in Sources */,

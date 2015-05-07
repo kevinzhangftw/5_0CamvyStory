@@ -2,11 +2,11 @@
 import UIKit
 import AVFoundation
 
-let mediaMuxer = MediaMuxer()
+let mediaMuxer = Muxer()
 
 var someOutputURL:NSURL!
 
-class MediaMuxer: NSObject {
+class Muxer: NSObject {
   
   var mutableComposition: AVMutableComposition!
   var mutableVideoComposition: AVMutableVideoComposition!

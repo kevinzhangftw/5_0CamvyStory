@@ -105,7 +105,8 @@ class MediaViewController: UIViewController {
   }
   
   func outputSize() -> CGSize {
-    return CGSizeMake(self.view.bounds.width, self.view.bounds.height)
+    //TODO: hardcoded for iphone 4s screeen res, needs to responsive for all ios devices
+    return CGSizeMake(640, 960)
   }
   
   func outputURL() -> NSURL {
