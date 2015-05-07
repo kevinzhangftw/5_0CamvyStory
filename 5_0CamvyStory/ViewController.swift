@@ -6,7 +6,7 @@ class ViewController: UIViewController {
   var recipientNumber: String!
   
   var mediaVC: MediaViewController!
-  let messageComposeVC: MFMessageComposer = MFMessageComposer()
+  let messageComposeInstance: MFMessageComposer = MFMessageComposer()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -16,7 +16,7 @@ class ViewController: UIViewController {
   func setup() {
     presentRecipientVC()
     //messagecomposevc to call here when the message is sent.
-    messageComposeVC.recipientDelegate = self
+    messageComposeInstance.recipientDelegate = self
   }
   
   func presentRecipientVC() {
@@ -64,10 +64,10 @@ extension ViewController: ABPeoplePickerNavigationControllerDelegate{
   }
 }
 
-extension ViewController:  MediaViewControllerDelegate{
+extension ViewController: MediaViewControllerDelegate{
   func mediaViewControllerDidFinish() {
-    if messageComposeVC.canSendText(){
-      let systemMFMessageComposeVC = messageComposeVC.configuredMessageComposeViewController(recipientNumber)
+    if messageComposeInstance.canSendText(){
+      let systemMFMessageComposeVC = messageComposeInstance.configuredMessageComposeViewController(recipientNumber)
       presentViewController(systemMFMessageComposeVC, animated: true, completion: nil)
     } else {
       let errorAlert = UIAlertView(title: "Cannot Send Text Message", message: "Your device is not able to send text messages.", delegate: self, cancelButtonTitle: "OK")

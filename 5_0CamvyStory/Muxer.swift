@@ -200,7 +200,6 @@ class Muxer: NSObject {
   func outputURL() -> NSURL {
     var outputString = ""
     let timeInterval = NSDate().timeIntervalSince1970
-    
     let success = NSFileManager.defaultManager().createDirectoryAtPath(NSHomeDirectory().stringByAppendingPathComponent("Documents/rawrDirectory"), withIntermediateDirectories: false, attributes: nil, error: nil);
     if success {
       println("Creating directory successful!")
@@ -208,9 +207,10 @@ class Muxer: NSObject {
     }else{
       println("Creating directory on time interval otherwise")
       outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/" + "\(timeInterval)" + "-movie.m4v")
-  }
+    }
   
-  someOutputURL = NSURL(fileURLWithPath: outputString, isDirectory: false)!
-  println("someOutputURL currentOutputURL:\(someOutputURL)")
-  return someOutputURL
+    someOutputURL = NSURL(fileURLWithPath: outputString, isDirectory: false)!
+    println("someOutputURL currentOutputURL:\(someOutputURL)")
+    
+    return someOutputURL
 }
