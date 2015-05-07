@@ -70,7 +70,7 @@ class MediaViewController: UIViewController {
     
     textField = UITextField(frame: CGRectMake(0, (self.view.bounds.height - textFieldHeight)/4, textFieldWidth, textFieldHeight))
     textField.backgroundColor = UIColor.redColor()
-    textField.font = UIFont(name: "Helvetica", size: 50)
+    textField.font = UIFont(name: "Helvetica", size: 40)
     textField.attributedText = textFieldAttributedString("placeholder")
     textField.textAlignment = NSTextAlignment.Center
     textField.autocapitalizationType = UITextAutocapitalizationType.None
@@ -106,7 +106,7 @@ class MediaViewController: UIViewController {
   
   func outputSize() -> CGSize {
     //TODO: hardcoded for iphone 4s screeen res, needs to responsive for all ios devices
-    return CGSizeMake(640, 960)
+    return CGSizeMake(480, 640)
   }
   
   func outputURL() -> NSURL {

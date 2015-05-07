@@ -10,7 +10,7 @@ class Muxer: NSObject {
   
   var mutableComposition: AVMutableComposition!
   var mutableVideoComposition: AVMutableVideoComposition!
-  var mutableAudioMix: AVMutableAudioMix!
+  var mutableAudioMix: AVMutableAudioMix?
   var exportSession: AVAssetExportSession!
   
   override init() {
@@ -23,7 +23,7 @@ class Muxer: NSObject {
     
     addVideo(mediaAsset)
     addOverlay(mediaAsset, text: text)
-    addAudio(mediaAsset)
+//    addAudio(mediaAsset)
     export()
     
     return nil
@@ -45,13 +45,13 @@ class Muxer: NSObject {
     mutableVideoComposition.animationTool = animationTool(videoLayer: tempVideoLayer, inLayer: parentLayer)
   }
   
-  func addAudio(mediaAsset: AVAsset) {
-    let mutableAudioTrack = audioCompositionTrack(propertiesofAsset: mediaAsset)
-    mutableAudioMix = audioMix(track: mutableAudioTrack)
-  }
+//  func addAudio(mediaAsset: AVAsset) {
+//    let mutableAudioTrack = audioCompositionTrack(propertiesofAsset: mediaAsset)
+//    mutableAudioMix = audioMix(track: mutableAudioTrack)
+//  }
   
   func export() {
-    self.exportSession = exportSession(composition: mutableComposition.copy() as! AVComposition, videoComposition: mutableVideoComposition, audioMix: mutableAudioMix, outputURL: outputURL())
+    self.exportSession = exportSession(composition: mutableComposition.copy() as! AVComposition, videoComposition: mutableVideoComposition, audioMix: mutableAudioMix?, outputURL: outputURL())
     
     self.exportSession.exportAsynchronouslyWithCompletionHandler {
       if self.exportSession.status == .Completed {
@@ -116,7 +116,7 @@ class Muxer: NSObject {
   func overlay(text: String) -> CATextLayer {
     let overlayText = CATextLayer()
     overlayText.font = "Helvetica"
-    overlayText.fontSize = 60
+    overlayText.fontSize = 45
     overlayText.frame = CGRectMake(0, 0, self.videoLayer().bounds.width, 100)
     println("self.videoLayer().bounds.width: \(self.videoLayer().bounds.width)")
     overlayText.string = text
@@ -130,7 +130,7 @@ class Muxer: NSObject {
     let overlayLayer = CALayer()
     overlayLayer.addSublayer(textLayer)
     overlayLayer.backgroundColor = UIColor.clearColor().CGColor
-    overlayLayer.frame = CGRectMake(0, (self.videoLayer().bounds.height)/22, self.videoLayer().bounds.width, 100)
+    overlayLayer.frame = CGRectMake(0, (self.videoLayer().bounds.height)/2, self.videoLayer().bounds.width, 100)
     println("self.videoLayer().bounds.height: \(self.videoLayer().bounds.height)")
     overlayLayer.masksToBounds = true
 //    overlayLayer.opacity = 0.8
