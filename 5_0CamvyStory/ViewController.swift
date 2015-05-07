@@ -1,9 +1,7 @@
-
-
 import UIKit
 import AddressBookUI
 
-class ViewController: UIViewController, UINavigationControllerDelegate {
+class ViewController: UIViewController {
   
   var recipientNumber: String!
   
@@ -13,7 +11,6 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     setup()
-    
   }
   
   func setup() {
@@ -40,7 +37,6 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
       
       //presenting child viewcontroller?? why??
       self.addChildViewController(mediaVC)
-      println(mediaVC.view!)
       self.view.addSubview(mediaVC!.view)
       mediaVC!.didMoveToParentViewController(self)
     }
@@ -62,7 +58,7 @@ extension ViewController: ABPeoplePickerNavigationControllerDelegate{
     
     self.dismissViewControllerAnimated(true, completion: { () -> Void in
       //start recording here.
-    println("start recodring here")
+    println("kevin says start recording here")
       self.mediaVC!.recordNewVideo()
     })
   }
