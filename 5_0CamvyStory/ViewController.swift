@@ -8,25 +8,25 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
   var recipientNumber: String!
   
   var mediaVC: MediaViewController!
-  let messageComposeVC = MFMessageComposer()
+  let messageComposeVC: MFMessageComposer = MFMessageComposer()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     setup()
     
-    //wear the delgate hat for messagecomposevc to call people picker factory upon completion
-    messageComposeVC.recipientDelegate = self
   }
   
   func setup() {
     presentRecipientVC()
+    //messagecomposevc to call here when the message is sent.
+    messageComposeVC.recipientDelegate = self
   }
   
   func presentRecipientVC() {
     var peoplePicker = PeoplePickerFactory.returnaPeoplepicker()
-    //people picker is an instance of system view controller for displaying system contacts
+    //peoplepicker extension below
     peoplePicker.peoplePickerDelegate = self
-    //view will be presented through viewdidload
+    //peoplepicker view will be presented through viewdidload
     self.presentViewController(peoplePicker, animated: false){
       self.addMediaVC() //upon completion of presenting viewcontroller, preloading for performance
     }
@@ -38,7 +38,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
       //message delegate to trigger mfmessage upon media completion
       mediaVC.messageDelegate = self
       
-      //presenting child viewcontroller
+      //presenting child viewcontroller?? why??
       self.addChildViewController(mediaVC)
       println(mediaVC.view!)
       self.view.addSubview(mediaVC!.view)

@@ -3,7 +3,7 @@ import UIKit
 import AVFoundation
 
 let mediaMuxer = Muxer()
-
+//global
 var someOutputURL:NSURL!
 
 class Muxer: NSObject {
@@ -35,9 +35,9 @@ class Muxer: NSObject {
   }
   
   func addOverlay(mediaAsset: AVAsset, text: String) {
-    
     let tempVideoLayer = videoLayer()
     let parentLayer = CALayer()
+    //need to be responsive here
     parentLayer.frame = CGRectMake(0, 0, 480, 640)
     parentLayer.addSublayer(tempVideoLayer)
     parentLayer.addSublayer(overlayLayer(overlay(text)))
