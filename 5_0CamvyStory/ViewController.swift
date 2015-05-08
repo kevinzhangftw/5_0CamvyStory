@@ -4,6 +4,7 @@ import AddressBookUI
 class ViewController: UIViewController {
   
   var recipientNumber: String!
+  var attachmentURL: NSURL!
   
   var mediaVC: MediaViewController!
   let messageComposeInstance: MFMessageComposer = MFMessageComposer()
@@ -66,8 +67,12 @@ extension ViewController: ABPeoplePickerNavigationControllerDelegate{
 
 extension ViewController: MediaViewControllerDelegate{
   func mediaViewControllerDidFinish() {
-    if messageComposeInstance.canSendText(){
-      let systemMFMessageComposeVC = messageComposeInstance.configuredMessageComposeViewController(recipientNumber)
+    if MFMessageComposer.canSendText(){
+      //setup attachmentURL
+      attachmentURL = mediaMuxer.attachmentURL()
+      //generate an instance of messagecomposeVC
+      let systemMFMessageComposeVC = messageComposeInstance.configuredMessageComposeViewController(recipientNumber, attachmentURL: attachmentURL)
+      
       presentViewController(systemMFMessageComposeVC, animated: true, completion: nil)
     } else {
       let errorAlert = UIAlertView(title: "Cannot Send Text Message", message: "Your device is not able to send text messages.", delegate: self, cancelButtonTitle: "OK")

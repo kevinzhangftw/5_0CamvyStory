@@ -10,15 +10,15 @@ class MFMessageComposer: NSObject {
   var recipientNumber: String!
   
   // A wrapper function to indicate whether or not a text message can be sent from the user's device
-  func canSendText() -> Bool {
+  static func canSendText() -> Bool {
     return MFMessageComposeViewController.canSendText()
   }
   
-  func configuredMessageComposeViewController(number: String) -> MFMessageComposeViewController {
+  func configuredMessageComposeViewController(number: String, attachmentURL: NSURL) -> MFMessageComposeViewController {
     let mfmessageComposeVC = MFMessageComposeViewController()
         mfmessageComposeVC.messageComposeDelegate = self
         mfmessageComposeVC.recipients = [number]
-        mfmessageComposeVC.addAttachmentURL(someOutputURL, withAlternateFilename: nil)
+        mfmessageComposeVC.addAttachmentURL(attachmentURL, withAlternateFilename: nil)
     return mfmessageComposeVC
   }
 

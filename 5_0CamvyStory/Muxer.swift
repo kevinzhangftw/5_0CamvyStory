@@ -4,7 +4,7 @@ import AVFoundation
 
 let mediaMuxer = Muxer()
 //global
-var someOutputURL:NSURL!
+//var someOutputURL:NSURL!
 
 class Muxer: NSObject {
   
@@ -12,6 +12,8 @@ class Muxer: NSObject {
   var mutableVideoComposition: AVMutableVideoComposition!
 //  var mutableAudioMix: AVMutableAudioMix?
   var exportSession: AVAssetExportSession!
+  var finalOutputURL: NSURL!
+  
   
   override init() {
     super.init()
@@ -174,7 +176,6 @@ class Muxer: NSObject {
     
     //AVAssetExportSession init with 2 parameters; the avasset to export and the preset
     let exportSession = AVAssetExportSession(asset: composition as AVAsset, presetName: AVAssetExportPresetHighestQuality)
-    
     //the exportsession configuration
     exportSession.videoComposition = videoComposition
 //    exportSession.audioMix = audioMix
@@ -190,12 +191,9 @@ class Muxer: NSObject {
     println("didFinishExporting!!!")
   }
   
-  
-  
   func assetFromURL(url:NSURL) -> AVAsset {
     return AVAsset.assetWithURL(url) as! AVAsset
   }
-}
 
   func outputURL() -> NSURL {
     var outputString = ""
@@ -209,8 +207,14 @@ class Muxer: NSObject {
       outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/" + "\(timeInterval)" + "-movie.m4v")
     }
   
-    someOutputURL = NSURL(fileURLWithPath: outputString, isDirectory: false)!
-    println("someOutputURL currentOutputURL:\(someOutputURL)")
+    finalOutputURL = NSURL(fileURLWithPath: outputString, isDirectory: false)!
+    println("someOutputURL currentOutputURL:\(finalOutputURL)")
     
-    return someOutputURL
+    return finalOutputURL
+  }
+  
+  func attachmentURL() -> NSURL {
+    return finalOutputURL
+  }
+  
 }
