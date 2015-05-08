@@ -31,13 +31,15 @@ class MediaViewController: UIViewController {
   }
   
   override func viewWillAppear(animated: Bool) {
-    videoCamera.startCameraCapture()
+//    videoCamera.startCameraCapture()
     textField.becomeFirstResponder()
 //    recordNewVideo()
   }
 
   //to be called through view controller
   func recordNewVideo() {
+    videoCamera.startCameraCapture()
+
     setupMovieWriter()
     movieWriter.startRecording()
   }
@@ -68,9 +70,9 @@ class MediaViewController: UIViewController {
     let textFieldWidth = self.view.bounds.width
     let textFieldHeight: CGFloat = 100
     
-    textField = UITextField(frame: CGRectMake(0, (self.view.bounds.height - textFieldHeight)/4, textFieldWidth, textFieldHeight))
-    textField.backgroundColor = UIColor.redColor()
-    textField.font = UIFont(name: "Helvetica", size: 50)
+    textField = UITextField(frame: CGRectMake(0, (self.view.bounds.height - textFieldHeight)/8, textFieldWidth, textFieldHeight))
+    textField.backgroundColor = UIColor.clearColor()
+    textField.font = UIFont(name: "Helvetica", size: 40)
     textField.attributedText = textFieldAttributedString("placeholder")
     textField.textAlignment = NSTextAlignment.Center
     textField.autocapitalizationType = UITextAutocapitalizationType.None
@@ -96,17 +98,12 @@ class MediaViewController: UIViewController {
   func setupMovieWriter() {
     assert(videoCamera != nil, "videoCamera is nil!!!")
     movieWriter = GPUImageMovieWriter(movieURL: outputURL(), size: outputSize())
-    movieWriter.shouldPassthroughAudio = true
+    movieWriter.shouldPassthroughAudio = false
     videoCamera.addTarget(movieWriter)
-    videoCamera.audioEncodingTarget = movieWriter
+//    videoCamera.audioEncodingTarget = movieWriter
     //TODO: make idempotent
     //TODO: consolidate behavior with filters.
     
-  }
-  
-  func outputSize() -> CGSize {
-    //TODO: hardcoded for iphone 4s screeen res, needs to responsive for all ios devices
-    return CGSizeMake(640, 960)
   }
   
   func outputURL() -> NSURL {
@@ -116,8 +113,14 @@ class MediaViewController: UIViewController {
     let outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/" + "\(timeInterval)" + "-movie.m4v")
     //NSURL object initialized to outputString
     currentOutputURL = NSURL(fileURLWithPath: outputString, isDirectory: false)!
+    //temp URL to write to for muxer to access
     println("outputURL currentOutputURL:\(currentOutputURL)")
     return currentOutputURL
+  }
+  
+  func outputSize() -> CGSize {
+    //TODO: hardcoded for iphone 4s screeen res, needs to responsive for all ios devices
+    return CGSizeMake(480, 640)
   }
   
 } //class ends here. extension begins
@@ -126,13 +129,19 @@ extension MediaViewController: UITextFieldDelegate {
   //upon textfield done button being pressed, finish recording and proceed to the next stage
   func textFieldShouldReturn(textField: UITextField) -> Bool {
       movieWriter.finishRecordingWithCompletionHandler {
+        //end the capturing session
+        self.videoCamera.stopCameraCapture()
+        
         //upon completion, pass all the stuff to the muxer to complete the action
         mediaMuxer.mux(videoUrl: self.currentOutputURL, and: textField.attributedText!.string)
+        
         //call message composer
         self.messageDelegate?.mediaViewControllerDidFinish()
         }
+    
     return true
   }
+  
 }
 
 

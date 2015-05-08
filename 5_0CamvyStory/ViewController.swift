@@ -1,33 +1,31 @@
-
-
 import UIKit
 import AddressBookUI
 
-class ViewController: UIViewController, UINavigationControllerDelegate {
+class ViewController: UIViewController {
   
   var recipientNumber: String!
+  var attachmentURL: NSURL!
   
   var mediaVC: MediaViewController!
-  let messageComposeVC = MFMessageComposer()
+  let messageComposeInstance: MFMessageComposer = MFMessageComposer()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     setup()
-    
-    //wear the delgate hat for messagecomposevc to call people picker factory upon completion
-    messageComposeVC.recipientDelegate = self
   }
   
   func setup() {
     presentRecipientVC()
+    //messagecomposevc to call here when the message is sent.
+    messageComposeInstance.recipientDelegate = self
   }
   
   func presentRecipientVC() {
     var peoplePicker = PeoplePickerFactory.returnaPeoplepicker()
-    //people picker is an instance of system view controller for displaying system contacts
+    //peoplepicker extension below
     peoplePicker.peoplePickerDelegate = self
-    //view will be presented through viewdidload
-    self.presentViewController(peoplePicker, animated: true){
+    //peoplepicker view will be presented through viewdidload
+    self.presentViewController(peoplePicker, animated: false){
       self.addMediaVC() //upon completion of presenting viewcontroller, preloading for performance
     }
   }
@@ -38,9 +36,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
       //message delegate to trigger mfmessage upon media completion
       mediaVC.messageDelegate = self
       
-      //presenting child viewcontroller
+      //presenting child viewcontroller?? why??
       self.addChildViewController(mediaVC)
-      println(mediaVC.view!)
       self.view.addSubview(mediaVC!.view)
       mediaVC!.didMoveToParentViewController(self)
     }
@@ -62,16 +59,20 @@ extension ViewController: ABPeoplePickerNavigationControllerDelegate{
     
     self.dismissViewControllerAnimated(true, completion: { () -> Void in
       //start recording here.
-    println("start recodring here")
+    println("kevin says start recording here")
       self.mediaVC!.recordNewVideo()
     })
   }
 }
 
-extension ViewController:  MediaViewControllerDelegate{
+extension ViewController: MediaViewControllerDelegate{
   func mediaViewControllerDidFinish() {
-    if messageComposeVC.canSendText(){
-      let systemMFMessageComposeVC = messageComposeVC.configuredMessageComposeViewController(recipientNumber)
+    if MFMessageComposer.canSendText(){
+      //setup attachmentURL
+      attachmentURL = mediaMuxer.attachmentURL()
+      //generate an instance of messagecomposeVC
+      let systemMFMessageComposeVC = messageComposeInstance.configuredMessageComposeViewController(recipientNumber, attachmentURL: attachmentURL)
+      
       presentViewController(systemMFMessageComposeVC, animated: true, completion: nil)
     } else {
       let errorAlert = UIAlertView(title: "Cannot Send Text Message", message: "Your device is not able to send text messages.", delegate: self, cancelButtonTitle: "OK")

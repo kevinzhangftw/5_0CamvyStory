@@ -3,15 +3,17 @@ import UIKit
 import AVFoundation
 
 let mediaMuxer = Muxer()
-
-var someOutputURL:NSURL!
+//global
+//var someOutputURL:NSURL!
 
 class Muxer: NSObject {
   
   var mutableComposition: AVMutableComposition!
   var mutableVideoComposition: AVMutableVideoComposition!
-  var mutableAudioMix: AVMutableAudioMix!
+//  var mutableAudioMix: AVMutableAudioMix?
   var exportSession: AVAssetExportSession!
+  var finalOutputURL: NSURL!
+  
   
   override init() {
     super.init()
@@ -23,7 +25,7 @@ class Muxer: NSObject {
     
     addVideo(mediaAsset)
     addOverlay(mediaAsset, text: text)
-    addAudio(mediaAsset)
+//    addAudio(mediaAsset)
     export()
     
     return nil
@@ -31,27 +33,27 @@ class Muxer: NSObject {
   
   
   func addVideo(mediaAsset: AVAsset) {
-    
     mutableVideoComposition = mutableVideoComposition(propertiesOfAsset: mediaAsset)
   }
   
   func addOverlay(mediaAsset: AVAsset, text: String) {
-    
     let tempVideoLayer = videoLayer()
     let parentLayer = CALayer()
+    //need to be responsive here
     parentLayer.frame = CGRectMake(0, 0, 480, 640)
     parentLayer.addSublayer(tempVideoLayer)
     parentLayer.addSublayer(overlayLayer(overlay(text)))
     mutableVideoComposition.animationTool = animationTool(videoLayer: tempVideoLayer, inLayer: parentLayer)
   }
   
-  func addAudio(mediaAsset: AVAsset) {
-    let mutableAudioTrack = audioCompositionTrack(propertiesofAsset: mediaAsset)
-    mutableAudioMix = audioMix(track: mutableAudioTrack)
-  }
+//  func addAudio(mediaAsset: AVAsset) {
+//    let mutableAudioTrack = audioCompositionTrack(propertiesofAsset: mediaAsset)
+//    mutableAudioMix = audioMix(track: mutableAudioTrack)
+//  }
   
   func export() {
-    self.exportSession = exportSession(composition: mutableComposition.copy() as! AVComposition, videoComposition: mutableVideoComposition, audioMix: mutableAudioMix, outputURL: outputURL())
+    //, audioMix: mutableAudioMix "audio parameter removed"
+    self.exportSession = exportSession(composition: mutableComposition.copy() as! AVComposition, videoComposition: mutableVideoComposition, outputURL: outputURL())
     
     self.exportSession.exportAsynchronouslyWithCompletionHandler {
       if self.exportSession.status == .Completed {
@@ -109,6 +111,7 @@ class Muxer: NSObject {
     composition.instructions = [videoInstruction]
     composition.renderSize = CGSizeMake(480, 640) //Variable.
     composition.frameDuration = CMTimeMake(1, 10)
+    //TODO: reduce video duration
     return composition
   }
   
@@ -116,7 +119,7 @@ class Muxer: NSObject {
   func overlay(text: String) -> CATextLayer {
     let overlayText = CATextLayer()
     overlayText.font = "Helvetica"
-    overlayText.fontSize = 60
+    overlayText.fontSize = 45
     overlayText.frame = CGRectMake(0, 0, self.videoLayer().bounds.width, 100)
     println("self.videoLayer().bounds.width: \(self.videoLayer().bounds.width)")
     overlayText.string = text
@@ -130,7 +133,7 @@ class Muxer: NSObject {
     let overlayLayer = CALayer()
     overlayLayer.addSublayer(textLayer)
     overlayLayer.backgroundColor = UIColor.clearColor().CGColor
-    overlayLayer.frame = CGRectMake(0, (self.videoLayer().bounds.height)/22, self.videoLayer().bounds.width, 100)
+    overlayLayer.frame = CGRectMake(0, (self.videoLayer().bounds.height)/1.4, self.videoLayer().bounds.width, 100)
     println("self.videoLayer().bounds.height: \(self.videoLayer().bounds.height)")
     overlayLayer.masksToBounds = true
 //    overlayLayer.opacity = 0.8
@@ -139,6 +142,7 @@ class Muxer: NSObject {
   
   func videoLayer() -> CALayer {
     let videoLayer = CALayer()
+//TODO: hardcoded frame, needs to be responsive for all ios devices
     videoLayer.frame = CGRectMake(0, 0, 480, 640)
 //    videoLayer.opacity = 0.5
     return videoLayer
@@ -148,33 +152,33 @@ class Muxer: NSObject {
     return AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videoLayer, inLayer: inLayer)
   }
   
-  func audioCompositionTrack(propertiesofAsset mediaAsset: AVAsset) -> AVMutableCompositionTrack{
-    var error: NSError?
-    let mutableAudioTrack = mutableComposition.addMutableTrackWithMediaType(AVMediaTypeAudio, preferredTrackID: CMPersistentTrackID( kCMPersistentTrackID_Invalid))
-    mutableAudioTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, mediaAsset.duration),
-      ofTrack: mediaAsset.tracksWithMediaType(AVMediaTypeAudio)[0] as! AVAssetTrack,
-      atTime: kCMTimeZero,
-      error: &error)
-    assert(error == nil, "audio error!! \(error)")
-    return mutableAudioTrack
-  }
+//  func audioCompositionTrack(propertiesofAsset mediaAsset: AVAsset) -> AVMutableCompositionTrack{
+//    var error: NSError?
+//    let mutableAudioTrack = mutableComposition.addMutableTrackWithMediaType(AVMediaTypeAudio, preferredTrackID: CMPersistentTrackID( kCMPersistentTrackID_Invalid))
+//    mutableAudioTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, mediaAsset.duration),
+//      ofTrack: mediaAsset.tracksWithMediaType(AVMediaTypeAudio)[0] as! AVAssetTrack,
+//      atTime: kCMTimeZero,
+//      error: &error)
+//    assert(error == nil, "audio error!! \(error)")
+//    return mutableAudioTrack
+//  }
   
   
-  func audioMix(#track: AVCompositionTrack) -> AVMutableAudioMix {
-    let mixParameters:AVAudioMixInputParameters = AVMutableAudioMixInputParameters(track: track)
-    let audioMix = AVMutableAudioMix()
-    audioMix.inputParameters = [mixParameters]
-    return audioMix
-  }
+//  func audioMix(#track: AVCompositionTrack) -> AVMutableAudioMix {
+//    let mixParameters:AVAudioMixInputParameters = AVMutableAudioMixInputParameters(track: track)
+//    let audioMix = AVMutableAudioMix()
+//    audioMix.inputParameters = [mixParameters]
+//    return audioMix
+//  }
   
-  func exportSession(#composition: AVComposition, videoComposition:AVVideoComposition, audioMix:AVAudioMix, outputURL:NSURL) -> AVAssetExportSession {
+  //, audioMix: mutableAudioMix "audio parameter removed"
+  func exportSession(#composition: AVComposition, videoComposition:AVVideoComposition, outputURL:NSURL) -> AVAssetExportSession {
     
     //AVAssetExportSession init with 2 parameters; the avasset to export and the preset
-    let exportSession = AVAssetExportSession(asset: composition as AVAsset, presetName: AVAssetExportPreset640x480)
-    
+    let exportSession = AVAssetExportSession(asset: composition as AVAsset, presetName: AVAssetExportPresetHighestQuality)
     //the exportsession configuration
     exportSession.videoComposition = videoComposition
-    exportSession.audioMix = audioMix
+//    exportSession.audioMix = audioMix
     exportSession.outputURL = outputURL
     println("exportSession.outputURL: \(exportSession.outputURL)")
     exportSession.outputFileType = AVFileTypeQuickTimeMovie
@@ -182,42 +186,35 @@ class Muxer: NSObject {
     return exportSession
   }
   
-  //
   
   func didFinishExporting() {
     println("didFinishExporting!!!")
   }
   
-  
-  
   func assetFromURL(url:NSURL) -> AVAsset {
     return AVAsset.assetWithURL(url) as! AVAsset
   }
- 
+
+  func outputURL() -> NSURL {
+    var outputString = ""
+    let timeInterval = NSDate().timeIntervalSince1970
+    let success = NSFileManager.defaultManager().createDirectoryAtPath(NSHomeDirectory().stringByAppendingPathComponent("Documents/rawrDirectory"), withIntermediateDirectories: false, attributes: nil, error: nil);
+    if success {
+      println("Creating directory successful!")
+      outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/rawrDirectory" + "\(timeInterval)" + "-movie.m4v")
+    }else{
+      println("Creating directory on time interval otherwise")
+      outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/" + "\(timeInterval)" + "-movie.m4v")
+    }
   
-}
-
-
-
-func outputURL() -> NSURL {
-
-  var outputString = ""
-  let timeInterval = NSDate().timeIntervalSince1970
-  
-  
-  let success = NSFileManager.defaultManager().createDirectoryAtPath(NSHomeDirectory().stringByAppendingPathComponent("Documents/rawrDirectory"), withIntermediateDirectories: false, attributes: nil, error: nil);
-  if success {
-    println("Creating directory successful!")
-    outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/rawrDirectory" + "\(timeInterval)" + "-movie.m4v")
+    finalOutputURL = NSURL(fileURLWithPath: outputString, isDirectory: false)!
+    println("someOutputURL currentOutputURL:\(finalOutputURL)")
     
-  } else {
-    println("Creating directory FAIL!")
-    outputString = NSHomeDirectory().stringByAppendingPathComponent("Documents/" + "\(timeInterval)" + "-movie.m4v")
+    return finalOutputURL
   }
   
-  
-  someOutputURL = NSURL(fileURLWithPath: outputString, isDirectory: false)!
-  println("someOutputURL currentOutputURL:\(someOutputURL)")
-  return someOutputURL
+  func attachmentURL() -> NSURL {
+    return finalOutputURL
+  }
   
 }
